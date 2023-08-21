@@ -50,7 +50,8 @@ namespace AuthProject.Controllers
             {
                 userName = user.userName,
                 password = user.password,
-                token = token
+                token = token,
+                id = 1
             };
 
             return new JsonResult(Ok(response));
@@ -80,7 +81,7 @@ namespace AuthProject.Controllers
         private string GenerateJwtToken(string userName)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secretKey); 
+            var key = Encoding.ASCII.GetBytes(secretKey);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -88,7 +89,9 @@ namespace AuthProject.Controllers
                 {
                     new Claim(ClaimTypes.Name, userName)
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(12),
+                Issuer = "https://dummy-auth-server.com",
+                Audience = "dummy-audience",
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

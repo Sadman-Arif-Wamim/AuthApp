@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AuthProject.Controllers;
 using System;
+using Microsoft.AspNetCore.Cors;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +20,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
              ValidateIssuer = true,
              ValidateAudience = true,
              ValidateIssuerSigningKey = true,
-             ValidIssuer = "https://localhost:7225/",
-             ValidAudience = "AuthProject",
+             ValidIssuer = "https://dummy-auth-server.com",
+             ValidAudience = "dummy-audience",
              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
          };
      });
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddDbContext<DBContext>
     (opt => opt.UseInMemoryDatabase("UserDB"));
@@ -38,7 +50,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
