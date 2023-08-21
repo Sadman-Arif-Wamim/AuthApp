@@ -304,7 +304,19 @@ node_modules/
 # Visual Studio 6 technical files
 *.ncb
 *.aps
+# Compiled binaries
+*.exe
+*.dll
 
+# Node.js dependencies
+node_modules/
+
+# Visual Studio Code settings
+.vscode/
+
+# Compiled output
+bin/
+obj/
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
 **/*.DesktopClient/GeneratedArtifacts
