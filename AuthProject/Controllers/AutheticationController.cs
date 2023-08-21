@@ -27,13 +27,19 @@ namespace AuthProject.Controllers
         [HttpPost("authenticate")]
         public JsonResult AutheticateUser(User user)
         {
+
+            bool isAuthenticated = false;
+
             if (user == null || user.userName == null || user.password == null)
             {
                 return new JsonResult(NotFound());
             }
 
-            bool isAuthenticated = true;
-
+            else if(user.userName == "admin@user.com" && user.password == "password1234")
+            {
+                isAuthenticated = true;
+            }
+            
             if (!isAuthenticated)
             {
                 return new JsonResult(Unauthorized());
