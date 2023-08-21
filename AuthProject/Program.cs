@@ -3,10 +3,12 @@ using AuthProject.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AuthProject.Controllers;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -16,9 +18,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
              ValidateIssuer = true,
              ValidateAudience = true,
              ValidateIssuerSigningKey = true,
-             ValidIssuer = "",
-             ValidAudience = "",
-             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-secret-key")) // Replace with your secret key
+             ValidIssuer = "https://localhost:7225/",
+             ValidAudience = "AuthProject",
+             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
          };
      });
 
@@ -26,13 +28,11 @@ builder.Services.AddDbContext<DBContext>
     (opt => opt.UseInMemoryDatabase("UserDB"));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
