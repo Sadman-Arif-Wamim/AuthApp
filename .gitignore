@@ -1,4 +1,4 @@
-Properties/
+*.json
 # Compiled binaries
 *.exe
 *.dll
