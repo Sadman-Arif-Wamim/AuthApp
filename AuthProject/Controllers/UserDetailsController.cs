@@ -9,9 +9,9 @@ namespace AuthProject.Controllers
     [ApiController]
     public class UserDetailsController : ControllerBase
     {
-        [HttpGet("getUserDetails")]
+        [HttpGet("getDetails")]
         [Authorize]
-        public JsonResult GetUserDetails(int id) 
+        public JsonResult GetDetails(int id) 
         {
             string userID = "Admin";
             string role = "Admin";

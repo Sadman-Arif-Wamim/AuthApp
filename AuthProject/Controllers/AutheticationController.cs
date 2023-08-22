@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace AuthProject.Controllers
 {
@@ -16,8 +17,6 @@ namespace AuthProject.Controllers
     public class AutheticationController : ControllerBase
     {
         private readonly DBContext _context;
-
-        string secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
 
         public AutheticationController(DBContext context) 
         {
@@ -81,7 +80,7 @@ namespace AuthProject.Controllers
         private string GenerateJwtToken(string userName)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secretKey);
+            var key = Encoding.ASCII.GetBytes("DefaultKeyGenerationNumber");
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -90,8 +89,8 @@ namespace AuthProject.Controllers
                     new Claim(ClaimTypes.Name, userName)
                 }),
                 Expires = DateTime.UtcNow.AddHours(12),
-                Issuer = "https://dummy-auth-server.com",
-                Audience = "dummy-audience",
+                Issuer = "DefaultIssuer",
+                Audience = "DefaultAudience",
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

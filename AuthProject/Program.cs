@@ -3,38 +3,32 @@ using AuthProject.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using AuthProject.Controllers;
-using System;
-using Microsoft.AspNetCore.Cors;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-     {
-         options.TokenValidationParameters = new TokenValidationParameters
-         {
-             ValidateIssuer = true,
-             ValidateAudience = true,
-             ValidateIssuerSigningKey = true,
-             ValidIssuer = "https://dummy-auth-server.com",
-             ValidAudience = "dummy-audience",
-             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-         };
-     });
-
-builder.Services.AddCors(options =>
+builder.Services.AddAuthentication(x =>
 {
-    options.AddDefaultPolicy(builder =>
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["JwtSetting:Issuer"] ?? "DefaultIssuer",
+        ValidAudience = builder.Configuration["JwtSetting:Audience"] ?? "DefaultAudience",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSetting:Key"] ?? "DefaultKey"))
+    };
 });
+
+builder.Services.AddAuthentication();
 
 builder.Services.AddDbContext<DBContext>
     (opt => opt.UseInMemoryDatabase("UserDB"));
@@ -52,6 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
