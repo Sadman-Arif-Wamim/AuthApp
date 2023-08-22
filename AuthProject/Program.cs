@@ -3,7 +3,10 @@ using AuthProject.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
+using AuthProject.Identity;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using AuthProject.Swagger;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +31,11 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddAuthentication();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(IdentityData.AdminUserPolicyName, p =>
+    p.RequireClaim(IdentityData.AdminUserClaimName, "true"));
+});
 
 builder.Services.AddDbContext<DBContext>
     (opt => opt.UseInMemoryDatabase("UserDB"));
@@ -36,7 +43,7 @@ builder.Services.AddDbContext<DBContext>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptons>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

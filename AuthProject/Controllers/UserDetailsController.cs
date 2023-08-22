@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AuthProject.Models;
+using AuthProject.Identity;
 
 namespace AuthProject.Controllers
 {
@@ -9,9 +10,11 @@ namespace AuthProject.Controllers
     [ApiController]
     public class UserDetailsController : ControllerBase
     {
-        [HttpGet("getDetails")]
-        [Authorize]
-        public JsonResult GetDetails(int id) 
+
+        [Authorize()]
+        [RequiresClaim(IdentityData.AdminUserClaimName, "true")] 
+        [HttpGet("getDetails")]      
+        public JsonResult GetDetails() 
         {
             string userID = "Admin";
             string role = "Admin";
