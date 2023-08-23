@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthProject", "AuthProject\AuthProject.csproj", "{B7EEEC60-9DF1-457D-86C9-1FD240718C69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthAPI", "AuthProject\AuthAPI.csproj", "{B7EEEC60-9DF1-457D-86C9-1FD240718C69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDirectory", "AuthDirectory\AuthDirectory.csproj", "{A52ABB44-3155-4B65-A466-6829B13A72D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B7EEEC60-9DF1-457D-86C9-1FD240718C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7EEEC60-9DF1-457D-86C9-1FD240718C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7EEEC60-9DF1-457D-86C9-1FD240718C69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52ABB44-3155-4B65-A466-6829B13A72D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52ABB44-3155-4B65-A466-6829B13A72D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52ABB44-3155-4B65-A466-6829B13A72D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52ABB44-3155-4B65-A466-6829B13A72D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

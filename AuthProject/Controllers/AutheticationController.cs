@@ -44,58 +44,16 @@ namespace AuthProject.Controllers
                 return new JsonResult(Unauthorized());
             }
 
-            var token = GenerateJwtToken(user.userName);
+            //var token = GenerateJwtToken(user.userName);
             var response = new UserResponse
             {
                 userName = user.userName,
                 password = user.password,
-                token = token,
+                //token = token,
                 id = 1
             };
 
             return new JsonResult(Ok(response));
-        }
-        
-        private static string GenerateSecretKey() 
-        {
-            int keyLength = 32;
-
-            byte[] secretKey = GenerateRandomKey(keyLength);
-
-            string base64Key = Convert.ToBase64String(secretKey);
-
-            return base64Key;
-        }
-
-        private static byte[] GenerateRandomKey(int keyLength)
-        {
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                byte[] key = new byte[keyLength];
-                rng.GetBytes(key);
-                return key;
-            }
-        }
-
-        private string GenerateJwtToken(string userName)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("DefaultKeyGenerationNumber");
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, userName)
-                }),
-                Expires = DateTime.UtcNow.AddHours(12),
-                Issuer = "DefaultIssuer",
-                Audience = "DefaultAudience",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
+        }       
     }
 }
