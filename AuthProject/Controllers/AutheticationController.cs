@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿    using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AuthProject.Models;
 using AuthProject.Data;
@@ -44,12 +44,10 @@ namespace AuthProject.Controllers
                 return new JsonResult(Unauthorized());
             }
 
-            //var token = GenerateJwtToken(user.userName);
             var response = new UserResponse
             {
                 userName = user.userName,
-                password = user.password,
-                //token = token,
+                password = user.password,          
                 id = 1
             };
 

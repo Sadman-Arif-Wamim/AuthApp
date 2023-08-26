@@ -57,6 +57,11 @@ namespace AuthDirectory.Controllers
                 new ("userid", request.role.ToString()),
             };
 
+            if (request.IncludeAdminClaim)
+            {
+                claims.Add(new Claim("admin", "true"));
+            }
+
             foreach ( var claimPair in request.CustomClaims ) 
             {
                 var jsonElement = (JsonElement)claimPair.Value;
