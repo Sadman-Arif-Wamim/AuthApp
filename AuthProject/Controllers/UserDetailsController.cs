@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AuthProject.Models;
 using AuthProject.Identity;
+using AuthProject.Data;
+using System.Data;
 
 namespace AuthProject.Controllers
 {
@@ -10,22 +11,58 @@ namespace AuthProject.Controllers
     [ApiController]
     public class UserDetailsController : ControllerBase
     {
+        private readonly DBContext _context;
+
+        public UserDetailsController(DBContext context)
+        {
+            _context = context;
+        }
 
         [Authorize()]
         [RequiresClaim(IdentityData.AdminUserClaimName, "true")] 
-        [HttpGet("getDetails")]      
-        public JsonResult GetDetails() 
+        [HttpGet("getAllDetails/{id}")]      
+        public JsonResult GetAllDetails(int id) 
         {
-            string userID = "Admin";
-            string role = "Admin";
+            User? user = _context.Users.FirstOrDefault(u => u.id == id);
 
-            var response = new User
+            if (user != null) 
             {
-                userName = userID,
-                role = role,
-            };
+                var response = new User
+                {
+                    userName = user.userName,
+                    role = user.role,
+                    id = id
+                };
+                return new JsonResult(Ok(response));
+            }
+            return new JsonResult(NotFound());
+        }
 
-            return new JsonResult(Ok(response));
+        [Authorize()]
+        [HttpGet("getRegularDetails/{id}")]
+        public JsonResult GetRegularDetails(int id) 
+        {
+            User? user = new User();
+            if (id != 1)
+            {
+                user = _context.Users.FirstOrDefault(u => u.id == id);
+            }
+            else
+            {
+                return new JsonResult(Unauthorized());
+            }
+ 
+            if (user != null)
+            {
+                var response = new User
+                {
+                    userName = user.userName,
+                    role = user.role,
+                    id = id
+                };
+                return new JsonResult(Ok(response));
+            }
+            return new JsonResult(NotFound());
         }
     }
 }

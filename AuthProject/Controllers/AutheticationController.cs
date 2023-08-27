@@ -1,4 +1,4 @@
-﻿    using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AuthProject.Models;
 using AuthProject.Data;
@@ -79,7 +79,6 @@ namespace AuthProject.Controllers
             }
             else
             {
-                // You might want to log the error or handle it differently
                 return "";
             }
         }
