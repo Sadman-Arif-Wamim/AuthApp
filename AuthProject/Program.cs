@@ -41,6 +41,7 @@ builder.Services.AddDbContext<DBContext>
     (opt => opt.UseInMemoryDatabase("Users"));
 
 builder.Services.AddHttpClient();
+builder.Services.AddSingleton<HttpClient>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
