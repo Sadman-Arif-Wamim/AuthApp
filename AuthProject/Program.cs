@@ -40,6 +40,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddDbContext<DBContext>
     (opt => opt.UseInMemoryDatabase("Users"));
 
+builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

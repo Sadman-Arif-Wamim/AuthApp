@@ -9,6 +9,8 @@ using System.Text;
 using System.Security.Cryptography;
 using System;
 using Microsoft.Extensions.Configuration;
+using AuthDirectory.Models;
+using System.Net.Http;
 
 namespace AuthProject.Controllers
 {
@@ -17,17 +19,17 @@ namespace AuthProject.Controllers
     public class AutheticationController : ControllerBase
     {
         private readonly DBContext _context;
+        private readonly HttpClient _httpClient;
 
-        public AutheticationController(DBContext context) 
+        public AutheticationController(DBContext context, HttpClient httpClient) 
         {
-            _context = context; 
+            _context = context;
+            _httpClient = httpClient;
         }
 
         [HttpPost("authenticate")]
-        public JsonResult AutheticateUser(User user)
+        public async Task<IActionResult> AutheticateUser(User user)
         {
-
-            bool isAuthenticated = false;
 
             if (user == null || user.userName == null || user.password == null)
             {
@@ -37,9 +39,7 @@ namespace AuthProject.Controllers
             User? userdetails = _context.Users.FirstOrDefault(u => u.userName == user.userName && u.password == user.password);
 
             if(userdetails != null)
-            {
-                isAuthenticated = true;
-
+            {            
                 var response = new User
                 {
                     userName = userdetails.userName,
@@ -48,10 +48,40 @@ namespace AuthProject.Controllers
                     id = userdetails.id
                 };
 
-                return new JsonResult(Ok(response));
+                var token = await GetToken(response);
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    response.token = token;
+                    return Ok(response);
+                }
             }
 
             return new JsonResult(Unauthorized());
-        }       
+        }
+
+
+        private async Task<string> GetToken(User user)
+        {
+            var tokenResponse = new TokenResponse
+            {
+                username = user.userName,
+                role = user.role,
+                IncludeAdminClaim = user.role == "admin" ? true : false 
+            };
+
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:7203/api/GenerateToken/token", tokenResponse);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return responseContent;
+            }
+            else
+            {
+                // You might want to log the error or handle it differently
+                return "";
+            }
+        }
     }
 }
