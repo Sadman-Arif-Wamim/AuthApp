@@ -34,24 +34,24 @@ namespace AuthProject.Controllers
                 return new JsonResult(NotFound());
             }
 
-            else if(user.userName == "admin@user.com" && user.password == "password1234")
+            User? userdetails = _context.Users.FirstOrDefault(u => u.userName == user.userName && u.password == user.password);
+
+            if(userdetails != null)
             {
                 isAuthenticated = true;
-            }
-            
-            if (!isAuthenticated)
-            {
-                return new JsonResult(Unauthorized());
+
+                var response = new User
+                {
+                    userName = userdetails.userName,
+                    password = userdetails.password,
+                    role = userdetails.role,
+                    id = userdetails.id
+                };
+
+                return new JsonResult(Ok(response));
             }
 
-            var response = new UserResponse
-            {
-                userName = user.userName,
-                password = user.password,          
-                id = 1
-            };
-
-            return new JsonResult(Ok(response));
+            return new JsonResult(Unauthorized());
         }       
     }
 }

@@ -19,7 +19,7 @@ namespace AuthProject.Controllers
             string userID = "Admin";
             string role = "Admin";
 
-            var response = new UserDetails
+            var response = new User
             {
                 userName = userID,
                 role = role,

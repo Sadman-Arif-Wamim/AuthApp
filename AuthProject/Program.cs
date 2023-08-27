@@ -38,7 +38,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddDbContext<DBContext>
-    (opt => opt.UseInMemoryDatabase("UserDB"));
+    (opt => opt.UseInMemoryDatabase("Users"));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -51,6 +51,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DBContext>();
+    context.Database.EnsureCreated();
+}
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
