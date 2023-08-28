@@ -1,4 +1,5 @@
-import * as React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -29,13 +30,37 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+
+    const [formData, setFormData] = useState({ userName: '', password: '' });
+    const [token, setToken] = useState('');
+
+    const token_config = {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            }
+        }
+
+    const handleAuth = (formData) => {
+        const response = axios
+            .post('https://localhost:7225/api/Authetication/authenticate',
+                formData)
+            .then(function (response) {
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const formData = {
+            userName: data.get('userName'),
+            password: data.get('password')
+}
+        console.log(formData);
+        handleAuth(formData);
     };
 
     return (
@@ -61,11 +86,11 @@ export default function SignIn() {
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
+                            id="userName"
                             label="Email Address"
-                            name="email"
+                            name="userName"
                             autoComplete="email"
-                            autoFocus
+                            autoFocus                          
                         />
                         <TextField
                             margin="normal"
@@ -75,7 +100,7 @@ export default function SignIn() {
                             label="Password"
                             type="password"
                             id="password"
-                            autoComplete="current-password"
+                            autoComplete="current-password"                         
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}

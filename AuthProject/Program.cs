@@ -40,6 +40,16 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddDbContext<DBContext>
     (opt => opt.UseInMemoryDatabase("Users"));
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<HttpClient>();
 builder.Services.AddControllers();
@@ -50,6 +60,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
