@@ -32,24 +32,57 @@ const defaultTheme = createTheme();
 export default function SignIn() {
 
     const [formData, setFormData] = useState({ userName: '', password: '' });
-    const [token, setToken] = useState('');
-
-    const token_config = {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            }
-        }
 
     const handleAuth = (formData) => {
-        const response = axios
+        var token = '';
+        var id = 0;
+        var role = '';
+
+        const tokenResponse = axios
             .post('https://localhost:7225/api/Authetication/authenticate',
                 formData)
             .then(function (response) {
                 console.log(response.data);
+                token = response.data.token;
+                id = response.data.id;
+                role = response.data.role;
+                console.log(id, role);
+
+                const token_config = {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                }
+
+                if (id === 1 && role === 'admin') {
+                    const detailsResponse = axios
+                        .get('https://localhost:7225/api/UserDetails/getAllDetails/' + id, token_config)
+                        .then(function (response) {
+                            console.log(response.data)
+                            if (response.data.userName != null || response.data.userName != '') {
+                                console.log('admin success')
+                            }
+                            else {
+                                console.log('wrong token')
+                            }
+                        })
+                }
+                else {
+                    const detailsResponse = axios
+                        .get('https://localhost:7225/api/UserDetails/getRegularDetails/' + id, token_config)
+                        .then(function (response) {
+                            if (response.data.userName != null || response.data.userName != '') {
+                                console.log('regular success')
+                            }
+                            else {
+                                console.log('Not found')
+                            }
+                        })
+                } 
             })
             .catch(function (error) {
                 console.log(error)
-            });
+            });              
     }
 
     const handleSubmit = (event) => {
