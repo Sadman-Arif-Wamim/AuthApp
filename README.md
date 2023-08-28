@@ -20,13 +20,14 @@ This project aims to provide user authentication and authorization using .NET Co
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/your-auth-project.git
+   git clone https://github.com/Sadman-Arif-Wamim/AuthApp.git
 
-2. Run the AuthAPI and AuthDirectory using Debug or dotnet run.
+2. Run the AuthAPI and AuthDirectory using Debug or dotnet run and use swagger for APIs.
 
 3. Run the authwebapplication using npm run start
 
 4. Open your browser and access http://localhost:3000 to use the app.
+
 
 ## Dummy Data
 
