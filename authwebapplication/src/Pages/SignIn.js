@@ -13,6 +13,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar'
 
 function Copyright(props) {
     return (
@@ -29,9 +33,37 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+
+
 export default function SignIn() {
 
     const [formData, setFormData] = useState({ userName: '', password: '' });
+    const [open, setOpen] = React.useState(false);
+    const [showSnackbar, setShowSnackbar] = React.useState(false);
+    const [message, setMessage] = React.useState('');
+    const [severity, setSeverity] = React.useState('');
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleSnackbarOpen = () => {
+        setShowSnackbar(true);
+    }
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setShowSnackbar(false);
+    }
 
     const handleAuth = (formData) => {
         var token = '';
@@ -59,11 +91,20 @@ export default function SignIn() {
                         .get('https://localhost:7225/api/UserDetails/getAllDetails/' + id, token_config)
                         .then(function (response) {
                             console.log(response.data)
-                            if (response.data.userName != null || response.data.userName != '') {
+                            if (response.data.userName !== null || response.data.userName !== '') {
                                 console.log('admin success')
+                                handleClose(); 
+                                handleSnackbarOpen();
+                                setMessage('Authenticated and Authorized Admin!')
+                                setSeverity('success');
                             }
                             else {
                                 console.log('wrong token')
+                                handleClose();
+                                handleSnackbarOpen();
+                                setMessage('Unauthorized!')
+                                setSeverity('warning');
+
                             }
                         })
                 }
@@ -71,17 +112,29 @@ export default function SignIn() {
                     const detailsResponse = axios
                         .get('https://localhost:7225/api/UserDetails/getRegularDetails/' + id, token_config)
                         .then(function (response) {
-                            if (response.data.userName != null || response.data.userName != '') {
+                            if (response.data.userName !== null || response.data.userName !== '') {
                                 console.log('regular success')
+                                handleClose();
+                                handleSnackbarOpen();
+                                setMessage('Authenticated and Authorized User!')
+                                setSeverity('success');
                             }
                             else {
                                 console.log('Not found')
+                                handleClose();
+                                handleSnackbarOpen();
+                                setMessage('Unauthorized!')
+                                setSeverity('warning');
                             }
                         })
                 } 
             })
             .catch(function (error) {
                 console.log(error)
+                handleClose();
+                handleSnackbarOpen();
+                setMessage('Unauthorized!')
+                setSeverity('error');
             });              
     }
 
@@ -144,9 +197,16 @@ export default function SignIn() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            onClick={handleOpen}
                         >
                             Sign In
                         </Button>
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open={open}                         
+                        >
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
@@ -163,6 +223,13 @@ export default function SignIn() {
                 </Box>
                 <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>
+            {showSnackbar &&
+                <Snackbar open={handleSnackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+                    <Alert onClose={handleSnackbarClose} severity={severity} sx={{ width: '100%' }}>
+                        {message}
+                    </Alert>
+                </Snackbar>
+            }
         </ThemeProvider>
     );
 }
