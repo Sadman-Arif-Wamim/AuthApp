@@ -42,3 +42,15 @@ This project aims to provide user authentication and authorization using .NET Co
 ## Configurations
 - For token generation, A dummy Issuer, Audience and Key is created and placed in the main directory for both the API and Identifier. **Please Do Store The Actual Credentials in the Code and Use a Key Vault**
 
+## Libraries
+- MUI Library is used for the front end. Use command in terminal 'npm install @mui/material @emotion/react @emotion/styled'. For more explanation, please visit: https://mui.com/material-ui/getting-started/
+- Microsoft.AspNetCore.Authentication.JwtBearer: For JWT-based authentication.
+- System.IdentityModel.Tokens.Jwt: For working with JWT tokens.
+- Microsoft.AspNetCore.Identity: For managing user identities.
+
+## Road Map
+- Add more pages in the UI.
+- Add more APIs for validation.
+- Implement Cookies and refreshing Tokens.
+- Add Auth 2.0  
+
