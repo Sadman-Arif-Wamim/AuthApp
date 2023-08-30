@@ -32,12 +32,12 @@ This project aims to provide user authentication and authorization using .NET Co
 ## Dummy Data
 
 - An in-memory database is used to store dummy data.
-  For Admin Login:
+- For Admin Login:
     username: admin@user.com
     password: password1234
-  For Regular Login:
+- For Regular Login:
     username: regular@user.com
-    password: passowrd1234
+    password: password1234
 
 ## Configurations
 - For token generation, A dummy Issuer, Audience and Key is created and placed in the main directory for both the API and Identifier. **Please Do Store The Actual Credentials in the Code and Use a Key Vault**
