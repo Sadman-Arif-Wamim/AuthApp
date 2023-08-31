@@ -15,6 +15,10 @@ This project aims to provide user authentication and authorization using .NET Co
 - [Node.js](https://nodejs.org/)
 - Visual Studio 2022 (for .Net 6.0 and higher support) or Visual Studio Code (optional)
 
+## Frameworks 
+- **.Net Core 6.0** for backend apis.
+- **ReactJs** for frontend UI
+
 ## Getting Started
 
 1. Clone the repository:
